@@ -8,7 +8,7 @@ Window* windowSetup()
 {
 	Window* window = malloc(sizeof(Window));
 	sfVideoMode mode = { WINDOW_LENGTH, WINDOW_HEIGHT, 32 };
-	window->renderWindow = sfRenderWindow_create(mode, "A* Algorithm", sfDefaultStyle, NULL);
+	window->renderWindow = sfRenderWindow_create(mode, "Hexagons", sfDefaultStyle, NULL);
 	window->renderTexture = sfRenderTexture_create(WINDOW_LENGTH, WINDOW_HEIGHT, sfFalse);
 	window->isDone = sfFalse;
 
