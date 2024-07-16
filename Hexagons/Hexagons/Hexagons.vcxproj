@@ -139,6 +139,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="mouseManager.c" />
+    <ClCompile Include="tile.c" />
     <ClCompile Include="tools.c" />
     <ClCompile Include="windowManager.c" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="keyboardManager.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mouseManager.h" />
+    <ClInclude Include="tile.h" />
     <ClInclude Include="tools.h" />
     <ClInclude Include="windowManager.h" />
   </ItemGroup>

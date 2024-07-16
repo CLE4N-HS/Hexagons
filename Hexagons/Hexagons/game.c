@@ -2,9 +2,11 @@
 #include "map.h"
 #include "mouseManager.h"
 #include "keyboardManager.h"
+#include "tile.h"
 
 void initGame(Window* _window)
 {
+	initTile();
 	initMap();
 	initMouse();
 	initKeyboard();
