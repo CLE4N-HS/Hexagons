@@ -2,7 +2,7 @@
 #include "windowManager.h"
 
 #define TILE_SIZE 128.f
-#define TILE_OFFSET_POS 10.f
+#define TILE_OFFSET_POS 2.f
 
 typedef enum {
 	TILE_MIDDLE = 0,
@@ -56,6 +56,6 @@ typedef struct {
 
 void initTile();
 void createTile(Tile* _tile, sfVector2f _pos);
-sfVector2f setDivisionCornerPos(Tile* _tile);
+void setDivisionCornerPos(Tile* _tile);
 sfColor getDivisonColor(TileType _type);
 float getTileApothem();

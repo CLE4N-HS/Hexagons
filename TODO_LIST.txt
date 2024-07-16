@@ -1,1 +1,1 @@
-- rename apothem with the proper name -> apohtem * 2
+- isInHexagon() formula

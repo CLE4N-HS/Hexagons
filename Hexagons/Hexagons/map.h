@@ -2,8 +2,8 @@
 #include "windowManager.h"
 #include "tile.h"
 
-#define MAP_X_SIZE 17
-#define MAP_Y_SIZE 13
+#define MAP_X_SIZE 7
+#define MAP_Y_SIZE 15
 
 typedef struct {
 	Tile** tile;
