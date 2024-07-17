@@ -15,7 +15,7 @@ float triangleSign(sfVector2f p1, sfVector2f p2, sfVector2f p3)
     return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
 }
 
-sfBool PointInTriangle(sfVector2f pt, sfVector2f v1, sfVector2f v2, sfVector2f v3)
+sfBool isPointInTriangle(sfVector2f pt, sfVector2f v1, sfVector2f v2, sfVector2f v3)
 {
     float d1, d2, d3;
     sfBool has_neg, has_pos;
@@ -30,13 +30,7 @@ sfBool PointInTriangle(sfVector2f pt, sfVector2f v1, sfVector2f v2, sfVector2f v
     return !(has_neg && has_pos);
 }
 
-sfBool isPointInHexagon(sfVector2f _point, sfVector2f _center, sfVector2f _corners[6])
+float getSqrMagnitude(sfVector2f _v1, sfVector2f _v2)
 {
-    for (int i = 0; i < 6; i++)
-    {
-        if (PointInTriangle(_point, _center, _corners[i], (i == 6 ? _corners[0] : _corners[i + 1])))
-            return sfTrue;
-    }
-
-    return sfFalse;
+    return (((_v2.x - _v1.x) * (_v2.x - _v1.x)) + ((_v2.y - _v1.y) * (_v2.y - _v1.y)));
 }

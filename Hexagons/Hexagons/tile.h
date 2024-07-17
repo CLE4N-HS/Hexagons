@@ -4,6 +4,8 @@
 #define TILE_SIZE 128.f
 #define TILE_OFFSET_POS 2.f
 
+#define TILE_RADIUS TILE_SIZE / 2.f
+
 typedef enum {
 	TILE_MIDDLE = 0,
 
@@ -13,13 +15,6 @@ typedef enum {
 	TILE_BOTTOM_RIGHT,
 	TILE_BOTTOM,
 	TILE_BOTTOM_LEFT,
-
-	TILE_TOP_LEFT_INTERIOR,
-	TILE_TOP_INTERIOR,
-	TILE_TOP_RIGHT_INTERIOR,
-	TILE_BOTTOM_RIGHT_INTERIOR,
-	TILE_BOTTOM_INTERIOR,
-	TILE_BOTTOM_LEFT_INTERIOR,
 
 	TILE_NB_MAX_DIVISIONS
 }TileDirection;
@@ -58,4 +53,5 @@ void initTile();
 void createTile(Tile* _tile, sfVector2f _pos);
 void setDivisionCornerPos(Tile* _tile);
 sfColor getDivisonColor(TileType _type);
-float getTileApothem();
+float getTileSqrApothem();
+sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile);

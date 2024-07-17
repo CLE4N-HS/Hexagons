@@ -5,12 +5,11 @@
 #define MAP_X_SIZE 7
 #define MAP_Y_SIZE 7
 
-typedef struct {
-	Tile** tile;
-}Map;
+#define MAP_START_POS vector2f(TILE_RADIUS, getTileSqrApothem() / 2.f);
 
 void initMap();
 void updateMap(Window* _window);
 void displayMap(Window* _window);
 void createMap();
 void resetMap();
+sfBool isIndexInMap(sfVector2i _index);
