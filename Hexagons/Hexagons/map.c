@@ -109,19 +109,19 @@ void resetMap()
 	{
 		for (int i = 0; i < MAP_X_SIZE; i++)
 		{
-			sfVector2f tilePos = vector2f((float)i * (TILE_SIZE + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemD2 + TILE_OFFSET_POS));
-
-			if (j % 2 == 0)
-				tilePos.x += TILE_SIZE * 0.75f + TILE_OFFSET_POS;
-
-			createTile(&map.tile[j][i], tilePos);
-
-			//sfVector2f tilePos = vector2f((float)i * (TILE_SIZE / 2.f + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemSquared + TILE_OFFSET_POS));
+			//sfVector2f tilePos = vector2f((float)i * (TILE_SIZE + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemD2 + TILE_OFFSET_POS));
 			//
-			//if (i % 2 == 0)
-			//	tilePos.y += tileApothemD2;
+			//if (j % 2 == 0)
+			//	tilePos.x += TILE_SIZE * 0.75f + TILE_OFFSET_POS;
 			//
 			//createTile(&map.tile[j][i], tilePos);
+
+			sfVector2f tilePos = vector2f((float)i * (TILE_SIZE / 2.f + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemSquared + TILE_OFFSET_POS));
+			
+			if (i % 2 == 0)
+				tilePos.y += tileApothemD2;
+			
+			createTile(&map.tile[j][i], tilePos);
 		}
 	}
 }

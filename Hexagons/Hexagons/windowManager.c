@@ -39,21 +39,26 @@ void updateWindow(Window* _window)
 			_window->isDone = sfTrue;
 	}
 
-	updateGame(_window);
+	if (sfRenderWindow_hasFocus(_window->renderWindow)) {
+		updateGame(_window);
+	}
+
 }
 
 void displayWindow(Window* _window)
 {
-	sfRenderWindow_clear(_window->renderWindow, sfBlack);
-	sfRenderTexture_clear(_window->renderTexture, sfBlack);
+	if (sfRenderWindow_hasFocus(_window->renderWindow)) {
+		sfRenderWindow_clear(_window->renderWindow, sfBlack);
+		sfRenderTexture_clear(_window->renderTexture, sfBlack);
 
-	displayGame(_window);
-	
-	sfRenderTexture_display(_window->renderTexture);
-	sfSprite_setTexture(windowSprite, sfRenderTexture_getTexture(_window->renderTexture), sfTrue);
-	sfRenderWindow_drawSprite(_window->renderWindow, windowSprite, NULL);
+		displayGame(_window);
 
-	sfRenderWindow_display(_window->renderWindow);
+		sfRenderTexture_display(_window->renderTexture);
+		sfSprite_setTexture(windowSprite, sfRenderTexture_getTexture(_window->renderTexture), sfTrue);
+		sfRenderWindow_drawSprite(_window->renderWindow, windowSprite, NULL);
+
+		sfRenderWindow_display(_window->renderWindow);
+	}
 }
 
 sfBool isDone(Window* _window)

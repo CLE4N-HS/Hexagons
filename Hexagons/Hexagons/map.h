@@ -3,7 +3,7 @@
 #include "tile.h"
 
 #define MAP_X_SIZE 7
-#define MAP_Y_SIZE 15
+#define MAP_Y_SIZE 7
 
 typedef struct {
 	Tile** tile;
