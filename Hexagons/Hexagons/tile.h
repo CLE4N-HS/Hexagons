@@ -6,6 +6,9 @@
 
 #define TILE_RADIUS TILE_SIZE / 2.f
 
+#define TILE_HOVER_COLOR color(255, 255, 255)
+#define TILE_VOID_COLOR  color( 30,  30,  30)
+
 typedef enum {
 	TILE_MIDDLE = 0,
 
@@ -55,3 +58,4 @@ void setDivisionCornerPos(Tile* _tile);
 sfColor getDivisonColor(TileType _type);
 float getTileSqrApothem();
 sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile);
+void debugRandomiseDivisionsTypes(Tile* _tile);

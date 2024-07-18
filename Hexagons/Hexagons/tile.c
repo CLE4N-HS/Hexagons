@@ -22,14 +22,14 @@ void createTile(Tile* _tile, sfVector2f _pos)
 {
 	_tile->pos = _pos;
 	_tile->state = TILE_STATE_VOID;
-	_tile->state = TILE_STATE_PLACED; // TODO remove this line
+	//_tile->state = TILE_STATE_PLACED; // TODO remove this line
 
 	setDivisionCornerPos(_tile);
 
 	for (int i = 0; i < TILE_NB_MAX_DIVISIONS; i++)
 	{
 		_tile->div[i].type = TILE_TYPE_EMPTY;
-		_tile->div[i].type = rand() % TILE_NB_MAX_TYPES; // TODO remove this line
+		//_tile->div[i].type = rand() % TILE_NB_MAX_TYPES; // TODO remove this line
 	}
 }
 
@@ -80,4 +80,14 @@ sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile)
 	}
 
 	return sfFalse;
+}
+
+void debugRandomiseDivisionsTypes(Tile* _tile) // TODO to remove
+{
+	_tile->state = TILE_STATE_PLACED;
+
+	for (int i = 0; i < TILE_NB_MAX_DIVISIONS; i++)
+	{
+		_tile->div[i].type = rand() % TILE_NB_MAX_TYPES;
+	}
 }
