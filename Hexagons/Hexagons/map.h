@@ -1,9 +1,7 @@
 #pragma once
 #include "windowManager.h"
-#include "tile.h"
-#include "stack.h"
 
-#define MAP_START_SIZE vector2i(16, 8)
+#define MAP_START_SIZE vector2i(19, 8)
 
 void initMap();
 void updateMap(Window* _window);
@@ -14,3 +12,4 @@ sfBool isIndexInMap(sfVector2i _index);
 sfVector2i getMapSize();
 sfVector2i getMapMouseHoverIndex();
 void setMapMouseHoverIndex(sfVector2i _mouseHoverIndex);
+sfBool isHandLooking();

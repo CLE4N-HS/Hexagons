@@ -1,12 +1,12 @@
 #pragma once
 #include "windowManager.h"
 
-#define TILE_SIZE 128.f
+#define TILE_START_SIZE 128.f
 #define TILE_OFFSET_POS 2.f
 
-#define TILE_RADIUS TILE_SIZE / 2.f
+#define TILE_START_RADIUS TILE_START_SIZE / 2.f
 
-#define TILE_START_POS vector2f(TILE_RADIUS, getTileSqrApothem() / 2.f);
+#define TILE_START_POS vector2f(TILE_START_RADIUS, getTileSqrApothem() / 2.f);
 
 #define TILE_HOVER_COLOR color(255, 255, 255)
 #define TILE_VOID_COLOR  color( 30,  30,  30)
@@ -54,14 +54,16 @@ typedef struct {
 	TileState state;
 	Division div[TILE_NB_MAX_DIVISIONS];
 	TileType middleDivType;
+	float radius;
 }Tile;
 
 void initTile();
 void updateTile(Window* _window, Tile** _tile);
 void displayTile(Window* _window, Tile** _tile);
-void drawTile(Window* _window, Tile _tile);
+void drawTile(Window* _window, Tile* _tile);
+void drawTileHover(Window* _window, Tile* _tile);
 void createTile(Tile* _tile, sfVector2f _pos, TileState _state);
-void setDivisionCornerPos(Tile* _tile);
+void resetDivisionCornerPos(Tile* _tile);
 sfColor getDivisonColor(TileType _type);
 float getTileSqrApothem();
 sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile);

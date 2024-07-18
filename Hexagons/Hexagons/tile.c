@@ -21,7 +21,7 @@ void initTile()
 	divisionColor[TILE_TYPE_WATER]	 = color(150, 200, 150);
 	divisionColor[TILE_TYPE_RAILWAY] = color(150, 100,  50);
 
-	tileSqrApothem = TILE_RADIUS / tanf(PI / 6.f);
+	tileSqrApothem = TILE_START_RADIUS / tanf(PI / 6.f);
 }
 
 void updateTile(Window* _window, Tile** _tile)
@@ -30,6 +30,8 @@ void updateTile(Window* _window, Tile** _tile)
 
 	sfVector2i closestIndex = NULLVECTOR2I;
 	float closestDistance = getSqrMagnitude(mousePos, _tile[closestIndex.y][closestIndex.x].pos);
+
+	sfBool tmpIsHandLooking = isHandLooking();
 
 	sfVector2i mapSize = getMapSize();
 
@@ -47,7 +49,7 @@ void updateTile(Window* _window, Tile** _tile)
 
 	sfVector2i mapMouseHoverIndex = getMapMouseHoverIndex();
 
-	if (isIndexInMap(closestIndex) && isPointInHexagonTile(mousePos, _tile[closestIndex.y][closestIndex.x])) {
+	if (!tmpIsHandLooking && isIndexInMap(closestIndex) && isPointInHexagonTile(mousePos, _tile[closestIndex.y][closestIndex.x])) {
 		setMapMouseHoverIndex(closestIndex);
 	}
 	else
@@ -70,34 +72,22 @@ void displayTile(Window* _window, Tile** _tile)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
-			drawTile(_window, _tile[j][i]);
+			drawTile(_window, &_tile[j][i]);
 		}
 	}
 
 	sfVector2i mapMouseHoverIndex = getMapMouseHoverIndex();
 
 	if (isIndexInMap(mapMouseHoverIndex)) {
-		sfVertexArray_setPrimitiveType(tileVertexArray, sfLineStrip);
-
-		tmpVertex.color = TILE_HOVER_COLOR;
-		for (int iDiv = TILE_TOP_LEFT; iDiv <= TILE_BOTTOM_LEFT; iDiv++) // exterior contour
-		{
-			tmpVertex.position = _tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x].div[iDiv].cornerPos;
-			sfVertexArray_append(tileVertexArray, tmpVertex);
-		}
-		tmpVertex.position = _tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x].div[TILE_TOP_LEFT].cornerPos;
-		sfVertexArray_append(tileVertexArray, tmpVertex);
-
-		sfRenderTexture_drawVertexArray(_window->renderTexture, tileVertexArray, NULL);
-		sfVertexArray_clear(tileVertexArray);
+		drawTileHover(_window, &_tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x]);
 	}
 }
 
-void drawTile(Window* _window, Tile _tile)
+void drawTile(Window* _window, Tile* _tile)
 {
 	sfVertex tmpVertex;
 
-	switch (_tile.state)
+	switch (_tile->state)
 	{
 	case TILE_STATE_VOID:
 		sfVertexArray_setPrimitiveType(tileVertexArray, sfLineStrip);
@@ -105,10 +95,10 @@ void drawTile(Window* _window, Tile _tile)
 		tmpVertex.color = TILE_VOID_COLOR;
 		for (int iDiv = TILE_TOP_LEFT; iDiv <= TILE_BOTTOM_LEFT; iDiv++) // exterior contour
 		{
-			tmpVertex.position = _tile.div[iDiv].cornerPos;
+			tmpVertex.position = _tile->div[iDiv].cornerPos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 		}
-		tmpVertex.position = _tile.div[TILE_TOP_LEFT].cornerPos;
+		tmpVertex.position = _tile->div[TILE_TOP_LEFT].cornerPos;
 		sfVertexArray_append(tileVertexArray, tmpVertex);
 
 		sfRenderTexture_drawVertexArray(_window->renderTexture, tileVertexArray, NULL);
@@ -120,10 +110,10 @@ void drawTile(Window* _window, Tile _tile)
 		tmpVertex.color = color(200, 200, 200);
 		for (int iDiv = TILE_TOP_LEFT; iDiv <= TILE_BOTTOM_LEFT; iDiv++) // exterior contour
 		{
-			tmpVertex.position = _tile.div[iDiv].cornerPos;
+			tmpVertex.position = _tile->div[iDiv].cornerPos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 		}
-		tmpVertex.position = _tile.div[TILE_TOP_LEFT].cornerPos;
+		tmpVertex.position = _tile->div[TILE_TOP_LEFT].cornerPos;
 		sfVertexArray_append(tileVertexArray, tmpVertex);
 
 		sfRenderTexture_drawVertexArray(_window->renderTexture, tileVertexArray, NULL);
@@ -134,25 +124,25 @@ void drawTile(Window* _window, Tile _tile)
 
 		for (int iDiv = TILE_TOP_LEFT; iDiv <= TILE_BOTTOM_LEFT; iDiv++) // exteriors divisions
 		{
-			tmpVertex.color = getDivisonColor(_tile.div[iDiv].type);
+			tmpVertex.color = getDivisonColor(_tile->div[iDiv].type);
 
-			tmpVertex.position = _tile.div[iDiv].cornerPos;
+			tmpVertex.position = _tile->div[iDiv].cornerPos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 
-			tmpVertex.position = _tile.pos;
+			tmpVertex.position = _tile->pos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 
-			tmpVertex.position = _tile.div[(iDiv == TILE_BOTTOM_LEFT ? TILE_TOP_LEFT : iDiv + 1)].cornerPos;
+			tmpVertex.position = _tile->div[(iDiv == TILE_BOTTOM_LEFT ? TILE_TOP_LEFT : iDiv + 1)].cornerPos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 
 			sfRenderTexture_drawVertexArray(_window->renderTexture, tileVertexArray, NULL);
 			sfVertexArray_clear(tileVertexArray);
 		}
 
-		tmpVertex.color = getDivisonColor(_tile.middleDivType);
+		tmpVertex.color = getDivisonColor(_tile->middleDivType);
 		for (int iIntDiv = TILE_TOP_LEFT; iIntDiv <= TILE_BOTTOM_LEFT; iIntDiv++) // interior division
 		{
-			tmpVertex.position = _tile.div[iIntDiv].interiorCornerPos;
+			tmpVertex.position = _tile->div[iIntDiv].interiorCornerPos;
 			sfVertexArray_append(tileVertexArray, tmpVertex);
 		}
 
@@ -164,12 +154,32 @@ void drawTile(Window* _window, Tile _tile)
 	}
 }
 
+void drawTileHover(Window* _window, Tile* _tile)
+{
+	sfVertex tmpVertex;
+
+	sfVertexArray_setPrimitiveType(tileVertexArray, sfLineStrip);
+
+	tmpVertex.color = TILE_HOVER_COLOR;
+	for (int iDiv = TILE_TOP_LEFT; iDiv <= TILE_BOTTOM_LEFT; iDiv++) // exterior contour
+	{
+		tmpVertex.position = _tile->div[iDiv].cornerPos;
+		sfVertexArray_append(tileVertexArray, tmpVertex);
+	}
+	tmpVertex.position = _tile->div[TILE_TOP_LEFT].cornerPos;
+	sfVertexArray_append(tileVertexArray, tmpVertex);
+
+	sfRenderTexture_drawVertexArray(_window->renderTexture, tileVertexArray, NULL);
+	sfVertexArray_clear(tileVertexArray);
+}
+
 void createTile(Tile* _tile, sfVector2f _pos, TileState _state)
 {
 	_tile->pos = _pos;
 	_tile->state = _state;
+	_tile->radius = TILE_START_RADIUS;
 
-	setDivisionCornerPos(_tile);
+	resetDivisionCornerPos(_tile);
 
 	_tile->middleDivType = TILE_TYPE_EMPTY;
 	for (int i = 0; i < TILE_NB_MAX_DIVISIONS; i++)
@@ -178,21 +188,21 @@ void createTile(Tile* _tile, sfVector2f _pos, TileState _state)
 	}
 }
 
-void setDivisionCornerPos(Tile* _tile)
+void resetDivisionCornerPos(Tile* _tile)
 {
-	_tile->div[TILE_TOP_LEFT].cornerPos             = addVectorsf(_tile->pos, vector2f(-TILE_RADIUS, 0.f));
-	_tile->div[TILE_TOP].cornerPos                  = PolarCoords(_tile->pos, TILE_RADIUS, -2.f * PI / 3.f);
-	_tile->div[TILE_TOP_RIGHT].cornerPos            = PolarCoords(_tile->pos, TILE_RADIUS, -PI / 3.f);
-	_tile->div[TILE_BOTTOM_RIGHT].cornerPos         = addVectorsf(_tile->pos, vector2f(TILE_RADIUS, 0.f));
-	_tile->div[TILE_BOTTOM].cornerPos               = PolarCoords(_tile->pos, TILE_RADIUS, PI / 3.f);
-	_tile->div[TILE_BOTTOM_LEFT].cornerPos          = PolarCoords(_tile->pos, TILE_RADIUS, 2.f * PI / 3.f);
-
-	_tile->div[TILE_TOP_LEFT].interiorCornerPos     = addVectorsf(_tile->pos, vector2f(-TILE_SIZE / 6.f, 0.f));
-	_tile->div[TILE_TOP].interiorCornerPos          = PolarCoords(_tile->pos, TILE_SIZE / 6.f, -2.f * PI / 3.f);
-	_tile->div[TILE_TOP_RIGHT].interiorCornerPos    = PolarCoords(_tile->pos, TILE_SIZE / 6.f, -PI / 3.f);
-	_tile->div[TILE_BOTTOM_RIGHT].interiorCornerPos = addVectorsf(_tile->pos, vector2f(TILE_SIZE / 6.f, 0.f));
-	_tile->div[TILE_BOTTOM].interiorCornerPos       = PolarCoords(_tile->pos, TILE_SIZE / 6.f, PI / 3.f);
-	_tile->div[TILE_BOTTOM_LEFT].interiorCornerPos  = PolarCoords(_tile->pos, TILE_SIZE / 6.f, 2.f * PI / 3.f);
+	_tile->div[TILE_TOP_LEFT].cornerPos             = addVectorsf(_tile->pos, vector2f(-_tile->radius, 0.f));
+	_tile->div[TILE_TOP].cornerPos                  = PolarCoords(_tile->pos, _tile->radius, -2.f * PI / 3.f);
+	_tile->div[TILE_TOP_RIGHT].cornerPos            = PolarCoords(_tile->pos, _tile->radius, -PI / 3.f);
+	_tile->div[TILE_BOTTOM_RIGHT].cornerPos         = addVectorsf(_tile->pos, vector2f(_tile->radius, 0.f));
+	_tile->div[TILE_BOTTOM].cornerPos               = PolarCoords(_tile->pos, _tile->radius, PI / 3.f);
+	_tile->div[TILE_BOTTOM_LEFT].cornerPos          = PolarCoords(_tile->pos, _tile->radius, 2.f * PI / 3.f);
+																			
+	_tile->div[TILE_TOP_LEFT].interiorCornerPos     = addVectorsf(_tile->pos, vector2f(-_tile->radius / 3.f, 0.f));
+	_tile->div[TILE_TOP].interiorCornerPos          = PolarCoords(_tile->pos, _tile->radius / 3.f, -2.f * PI / 3.f);
+	_tile->div[TILE_TOP_RIGHT].interiorCornerPos    = PolarCoords(_tile->pos, _tile->radius / 3.f, -PI / 3.f);
+	_tile->div[TILE_BOTTOM_RIGHT].interiorCornerPos = addVectorsf(_tile->pos, vector2f(_tile->radius / 3.f, 0.f));
+	_tile->div[TILE_BOTTOM].interiorCornerPos       = PolarCoords(_tile->pos, _tile->radius / 3.f, PI / 3.f);
+	_tile->div[TILE_BOTTOM_LEFT].interiorCornerPos  = PolarCoords(_tile->pos, _tile->radius / 3.f, 2.f * PI / 3.f);
 }
 
 sfColor getDivisonColor(TileType _type)
@@ -207,7 +217,7 @@ float getTileSqrApothem()
 
 sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile)
 {
-	float sqrRadius = TILE_RADIUS * TILE_RADIUS;
+	float sqrRadius = _tile.radius * _tile.radius;
 	float sqrMagnitude = getSqrMagnitude(_point, _tile.pos);
 
 	if (sqrMagnitude <= sqrRadius * 0.75f) // inner radius

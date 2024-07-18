@@ -1,4 +1,6 @@
-- URGENT la stack qui a rien a voir avec la map ?? probablement
+- URGENT :
+  - check collisions of _hand->tile[_hand->mouseHoverIndex] before any other to see if
+    we're still on it or no
 
 - main centrée (ou un peu décalée à gauche) en bas comme dans HS
 - on peut choisir la tuile qu'on place

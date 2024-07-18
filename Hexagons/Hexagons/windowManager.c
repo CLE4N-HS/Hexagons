@@ -1,18 +1,17 @@
 #include "windowManager.h"
 #include "game.h"
+#include "keyboardManager.h"
 
 sfSprite* windowSprite;
 sfTexture* windowTexture;
 
-Window* windowSetup()
+Window* setupWindow()
 {
 	Window* window = malloc(sizeof(Window));
-	sfVideoMode mode = { WINDOW_LENGTH, WINDOW_HEIGHT, 32 };
-	window->renderWindow = sfRenderWindow_create(mode, "Hexagons", sfDefaultStyle, NULL);
+	window->isFullscreen = WINDOW_START_FULLSCREEN;
+	createWindow(window);
 	window->renderTexture = sfRenderTexture_create(WINDOW_LENGTH, WINDOW_HEIGHT, sfFalse);
 	window->isDone = sfFalse;
-
-	sfRenderWindow_setFramerateLimit(window->renderWindow, 60);
 
 	return window;
 }
@@ -41,8 +40,13 @@ void updateWindow(Window* _window)
 
 	if (sfRenderWindow_hasFocus(_window->renderWindow)) {
 		updateGame(_window);
-	}
 
+		if (getKeyState(sfKeyF11) == KEY_STATE_HAS_PRESSED) {
+			toggleFullscreen(_window);
+			destroyWindow(_window);
+			createWindow(_window);
+		}
+	}
 }
 
 void displayWindow(Window* _window)
@@ -61,7 +65,25 @@ void displayWindow(Window* _window)
 	}
 }
 
+void createWindow(Window* _window)
+{
+	sfVideoMode mode = { WINDOW_LENGTH, WINDOW_HEIGHT, 32 };
+	_window->renderWindow = sfRenderWindow_create(mode, "Hexagons", (_window->isFullscreen ? sfFullscreen : sfDefaultStyle), NULL);
+
+	sfRenderWindow_setFramerateLimit(_window->renderWindow, 60);
+}
+
+void destroyWindow(Window* _window)
+{
+	sfRenderWindow_destroy(_window->renderWindow);
+}
+
 sfBool isDone(Window* _window)
 {
 	return _window->isDone;
+}
+
+void toggleFullscreen(Window* _window)
+{
+	_window->isFullscreen = !_window->isFullscreen;
 }

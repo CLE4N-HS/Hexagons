@@ -2,11 +2,15 @@
 #include "mouseManager.h"
 #include "customMath.h"
 #include "keyboardManager.h"
+#include "tile.h"
+#include "stack.h"
+#include "hand.h"
 
 typedef struct {
 	sfVector2i size;
 	Tile** tile;
 	Stack stack;
+	Hand hand;
 	sfVector2i mouseHoverIndex;
 }Map;
 Map map;
@@ -18,6 +22,7 @@ void initMap()
 
 void updateMap(Window* _window)
 {
+	updateHand(_window, &map.hand);
 	updateTile(_window, map.tile);
 }
 
@@ -25,6 +30,7 @@ void displayMap(Window* _window)
 {
 	displayTile(_window, map.tile);
 	displayStack(_window, &map.stack);
+	displayHand(_window, &map.hand);
 }
 
 void createMap()
@@ -40,6 +46,7 @@ void createMap()
 
 	resetMap();
 	createStack(&map.stack);
+	createHand(&map.hand);
 }
 
 void resetMap()
@@ -54,14 +61,14 @@ void resetMap()
 	{
 		for (int i = 0; i < map.size.x; i++)
 		{
-			//sfVector2f tilePos = addVectorsf(tileStartPos, vector2f((float)i * (TILE_SIZE + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemD2 + TILE_OFFSET_POS)));
+			//sfVector2f tilePos = addVectorsf(tileStartPos, vector2f((float)i * (TILE_START_SIZE + TILE_OFFSET_POS) * 1.5f, (float)j * (tileApothemD2 + TILE_OFFSET_POS)));
 			//
 			//if (j % 2 == 0)
-			//	tilePos.x += TILE_SIZE * 0.75f + TILE_OFFSET_POS;
+			//	tilePos.x += TILE_START_SIZE * 0.75f + TILE_OFFSET_POS;
 			//
 			//createTile(&map.tile[j][i], tilePos);
 
-			sfVector2f tilePos = addVectorsf(tileStartPos, vector2f((float)i * (TILE_RADIUS + TILE_OFFSET_POS) * 1.5f, (float)j * (tileSqrApothem + TILE_OFFSET_POS)));
+			sfVector2f tilePos = addVectorsf(tileStartPos, vector2f((float)i * (TILE_START_RADIUS + TILE_OFFSET_POS) * 1.5f, (float)j * (tileSqrApothem + TILE_OFFSET_POS)));
 			
 			if (i % 2 == 0)
 				tilePos.y += halfTileSqrApothem;
@@ -89,4 +96,9 @@ sfVector2i getMapMouseHoverIndex()
 void setMapMouseHoverIndex(sfVector2i _mouseHoverIndex)
 {
 	map.mouseHoverIndex = _mouseHoverIndex;
+}
+
+sfBool isHandLooking()
+{
+	return (map.hand.mouseHoverIndex >= 0 ? sfTrue : sfFalse);
 }

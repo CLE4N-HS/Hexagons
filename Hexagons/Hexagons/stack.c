@@ -4,7 +4,7 @@ void displayStack(Window* _window, Stack* _stack)
 {
 	for (int i = 0; i < _stack->nbTiles; i++)
 	{
-		drawTile(_window, _stack->tile[i]);
+		drawTile(_window, &_stack->tile[i]);
 	}
 }
 
@@ -19,7 +19,7 @@ void createStack(Stack* _stack)
 	for (int i = 0; i < _stack->nbTiles; i++)
 	{
 		createTile(&_stack->tile[i], tilePos, TILE_STATE_PLACED);
-		tilePos.y += TILE_SIZE;
+		tilePos.y += TILE_START_SIZE;
 		debugRandomiseDivisionsTypes(&_stack->tile[i]);
 	}
 }
