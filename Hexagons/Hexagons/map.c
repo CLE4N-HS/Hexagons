@@ -102,3 +102,8 @@ sfBool isHandLooking()
 {
 	return (map.hand.mouseHoverIndex >= 0 ? sfTrue : sfFalse);
 }
+
+sfBool isHandPlacing()
+{
+	return (map.hand.state == HAND_STATE_PLACING ? sfTrue : sfFalse);
+}

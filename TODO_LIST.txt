@@ -1,6 +1,9 @@
 - URGENT :
-  - check collisions of _hand->tile[_hand->mouseHoverIndex] before any other to see if
-    we're still on it or no
+  - déplacer les interactions de map globales dans updatemap() après avoir update la main
+    c'est pas les tiles qui sont censées gérer les placement de la main etc..
+  -
+
+
 
 - main centrée (ou un peu décalée à gauche) en bas comme dans HS
 - on peut choisir la tuile qu'on place

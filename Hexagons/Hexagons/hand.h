@@ -9,7 +9,16 @@
 
 #define HAND_TILE_HOVER_SCALE 2.f
 
+#define HAND_MIN_Y_POS (WINDOW_HEIGHT - TILE_START_SIZE * 2.f)
+
+typedef enum {
+	HAND_STATE_LOOKING,
+	HAND_STATE_MOVING,
+	HAND_STATE_PLACING
+}HandState;
+
 typedef struct {
+	HandState state;
 	Tile tile[HAND_NB_MAX_TILES];
 	int nbTiles;
 	int mouseHoverIndex;

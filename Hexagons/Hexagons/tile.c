@@ -28,10 +28,11 @@ void updateTile(Window* _window, Tile** _tile)
 {
 	sfVector2f mousePos = getMousePos();
 
-	sfVector2i closestIndex = NULLVECTOR2I;
+	sfVector2i closestIndex = NULLVECTOR2I; // TODO maybe c'est updateMap() qui devrait s'occuper de ça ouais surement ouais pas mal
 	float closestDistance = getSqrMagnitude(mousePos, _tile[closestIndex.y][closestIndex.x].pos);
 
 	sfBool tmpIsHandLooking = isHandLooking();
+	sfBool tmpIsHandPlacing = isHandPlacing();
 
 	sfVector2i mapSize = getMapSize();
 
@@ -49,7 +50,7 @@ void updateTile(Window* _window, Tile** _tile)
 
 	sfVector2i mapMouseHoverIndex = getMapMouseHoverIndex();
 
-	if (!tmpIsHandLooking && isIndexInMap(closestIndex) && isPointInHexagonTile(mousePos, _tile[closestIndex.y][closestIndex.x])) {
+	if ((!tmpIsHandLooking || tmpIsHandPlacing) && isIndexInMap(closestIndex) && isPointInHexagonTile(mousePos, _tile[closestIndex.y][closestIndex.x])) {
 		setMapMouseHoverIndex(closestIndex);
 	}
 	else
