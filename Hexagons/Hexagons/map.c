@@ -78,7 +78,7 @@ void updateMap(Window* _window)
 			map.hand.mouseHoverIndex = closestHandIndex;
 			if (mouseLeftState >= MOUSE_STATE_PRESSED) { // selecting the tile
 				map.hand.state = HAND_STATE_MOVING;
-				map.hand.tile[map.hand.mouseHoverIndex].radius = TILE_START_RADIUS * HAND_TILE_HOVER_SCALE;
+				setTilePosAndRadius(&map.hand.tile[map.hand.mouseHoverIndex], mousePos, TILE_START_RADIUS * HAND_TILE_HOVER_SCALE);
 			}
 			else { // just looking / hovering the tile
 				setTilePosAndRadius(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y - TILE_START_RADIUS * HAND_TILE_HOVER_SCALE / 2.f + 9.f), TILE_START_RADIUS * HAND_TILE_HOVER_SCALE); // TODO +9.f is a fraud
@@ -86,8 +86,7 @@ void updateMap(Window* _window)
 		}
 		else {
 			if (map.hand.mouseHoverIndex >= 0) {
-				map.hand.tile[map.hand.mouseHoverIndex].radius = TILE_START_RADIUS;
-				setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y));
+				setTilePosAndRadius(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y), TILE_START_RADIUS);
 			}
 
 			map.hand.mouseHoverIndex = -1;
@@ -96,24 +95,29 @@ void updateMap(Window* _window)
 	case HAND_STATE_MOVING:
 		setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], mousePos);
 
-		if (mouseLeftState == MOUSE_STATE_RELEASED) {
+		if (mouseLeftState == MOUSE_STATE_RELEASED) { // releasing a tile in hand
 			map.hand.state = HAND_STATE_LOOKING;
-			map.hand.tile[map.hand.mouseHoverIndex].radius = TILE_START_RADIUS;
-
-			setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y));
+			setTilePosAndRadius(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y), TILE_START_RADIUS);
 		}
 		else if (mousePos.y < HAND_MIN_Y_POS) {
 			map.hand.state = HAND_STATE_PLACING;
-			map.hand.tile[map.hand.mouseHoverIndex].radius = TILE_START_RADIUS;
+			setTileRadius(&map.hand.tile[map.hand.mouseHoverIndex], TILE_START_RADIUS);
 		}
 		break;
 	case HAND_STATE_PLACING:
+		if (getKeyState(sfKeyA) == KEY_STATE_HAS_PRESSED) {
+			rotateTile(&map.hand.tile[map.hand.mouseHoverIndex], sfFalse);
+		}
+		else if (getKeyState(sfKeyE) == KEY_STATE_HAS_PRESSED || getMouseButtonState(sfMouseRight) == MOUSE_STATE_HAS_PRESSED) {
+			rotateTile(&map.hand.tile[map.hand.mouseHoverIndex], sfTrue);
+		}
+
 		if (mouseLeftState == MOUSE_STATE_RELEASED) {
 			map.hand.state = HAND_STATE_LOOKING;
-			map.hand.tile[map.hand.mouseHoverIndex].radius = TILE_START_RADIUS;
 			if (isIndexInMap(map.mouseHoverIndex)) {
 				setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x].pos);
 				map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x] = map.hand.tile[map.hand.mouseHoverIndex];
+				// delete the tile in hand
 			}
 			else {
 				setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y));
@@ -121,6 +125,7 @@ void updateMap(Window* _window)
 		}
 		else if (mousePos.y >= HAND_MIN_Y_POS) {
 			map.hand.state = HAND_STATE_MOVING;
+			setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], mousePos);
 		}
 		else {
 			setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], mousePos);

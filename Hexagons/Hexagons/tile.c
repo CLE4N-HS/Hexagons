@@ -198,11 +198,35 @@ void setTilePos(Tile* _tile, sfVector2f _pos)
 	resetDivisionCornerPos(_tile);
 }
 
+void setTileRadius(Tile* _tile, float _radius)
+{
+	_tile->radius = _radius;
+	resetDivisionCornerPos(_tile);
+}
+
 void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius)
 {
 	_tile->pos = _pos;
 	_tile->radius = _radius;
 	resetDivisionCornerPos(_tile);
+}
+
+void rotateTile(Tile* _tile, sfBool _clockwise)
+{
+	TileType tmpDivisionType = (_clockwise ? _tile->div[TILE_NB_MAX_DIVISIONS - 1].type : _tile->div[TILE_TOP_LEFT].type);
+
+	if (_clockwise) {
+		for (int i = TILE_NB_MAX_DIVISIONS - 1; i >= 0; i--)
+		{
+			_tile->div[i].type = (i == 0 ? tmpDivisionType : _tile->div[i - 1].type);
+		}
+	}
+	else {
+		for (int i = 0; i < TILE_NB_MAX_DIVISIONS; i++)
+		{
+			_tile->div[i].type = (i == TILE_NB_MAX_DIVISIONS - 1 ? tmpDivisionType : _tile->div[i + 1].type);
+		}
+	}
 }
 
 void debugRandomiseDivisionsTypes(Tile* _tile) // TODO to remove

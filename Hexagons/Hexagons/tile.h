@@ -69,6 +69,8 @@ float getTileSqrApothem();
 sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile);
 void setTileState(Tile* _tile, TileState _state);
 void setTilePos(Tile* _tile, sfVector2f _pos);
+void setTileRadius(Tile* _tile, float _radius);
 void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius);
+void rotateTile(Tile* _tile, sfBool _clockwise);
 
 void debugRandomiseDivisionsTypes(Tile* _tile);
