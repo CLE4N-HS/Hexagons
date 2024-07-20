@@ -68,5 +68,7 @@ sfColor getDivisonColor(TileType _type);
 float getTileSqrApothem();
 sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile);
 void setTileState(Tile* _tile, TileState _state);
+void setTilePos(Tile* _tile, sfVector2f _pos);
+void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius);
 
 void debugRandomiseDivisionsTypes(Tile* _tile);

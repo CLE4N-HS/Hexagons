@@ -12,5 +12,3 @@ sfBool isIndexInMap(sfVector2i _index);
 sfVector2i getMapSize();
 sfVector2i getMapMouseHoverIndex();
 void setMapMouseHoverIndex(sfVector2i _mouseHoverIndex);
-sfBool isHandLooking();
-sfBool isHandPlacing();

@@ -2,10 +2,7 @@
 
 void displayStack(Window* _window, Stack* _stack)
 {
-	for (int i = 0; i < _stack->nbTiles; i++)
-	{
-		drawTile(_window, &_stack->tile[i]);
-	}
+
 }
 
 void createStack(Stack* _stack)

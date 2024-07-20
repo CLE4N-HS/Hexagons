@@ -26,62 +26,12 @@ void initTile()
 
 void updateTile(Window* _window, Tile** _tile)
 {
-	sfVector2f mousePos = getMousePos();
-
-	sfVector2i closestIndex = NULLVECTOR2I; // TODO maybe c'est updateMap() qui devrait s'occuper de ça ouais surement ouais pas mal
-	float closestDistance = getSqrMagnitude(mousePos, _tile[closestIndex.y][closestIndex.x].pos);
-
-	sfBool tmpIsHandLooking = isHandLooking();
-	sfBool tmpIsHandPlacing = isHandPlacing();
-
-	sfVector2i mapSize = getMapSize();
-
-	for (int j = 0; j < mapSize.y; j++)
-	{
-		for (int i = 0; i < mapSize.x; i++)
-		{
-			float tmpDistance = getSqrMagnitude(mousePos, _tile[j][i].pos);
-			if (tmpDistance < closestDistance) {
-				closestDistance = tmpDistance;
-				closestIndex = vector2i(i, j);
-			}
-		}
-	}
-
-	sfVector2i mapMouseHoverIndex = getMapMouseHoverIndex();
-
-	if ((!tmpIsHandLooking || tmpIsHandPlacing) && isIndexInMap(closestIndex) && isPointInHexagonTile(mousePos, _tile[closestIndex.y][closestIndex.x])) {
-		setMapMouseHoverIndex(closestIndex);
-	}
-	else
-		setMapMouseHoverIndex(vector2i(-1, -1));
-
-	mapMouseHoverIndex = getMapMouseHoverIndex();
-
-	if (isIndexInMap(mapMouseHoverIndex) && getMouseButtonState(sfMouseLeft) == MOUSE_STATE_HAS_PRESSED) {
-		setTileState(&_tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x], TILE_STATE_PLACED);
-		debugRandomiseDivisionsTypes(&_tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x]);
-	}
+	
 }
 
 void displayTile(Window* _window, Tile** _tile)
 {
-	sfVertex tmpVertex;
-	sfVector2i mapSize = getMapSize();
 
-	for (int j = 0; j < mapSize.y; j++)
-	{
-		for (int i = 0; i < mapSize.x; i++)
-		{
-			drawTile(_window, &_tile[j][i]);
-		}
-	}
-
-	sfVector2i mapMouseHoverIndex = getMapMouseHoverIndex();
-
-	if (isIndexInMap(mapMouseHoverIndex)) {
-		drawTileHover(_window, &_tile[mapMouseHoverIndex.y][mapMouseHoverIndex.x]);
-	}
 }
 
 void drawTile(Window* _window, Tile* _tile)
@@ -240,6 +190,19 @@ sfBool isPointInHexagonTile(sfVector2f _point, Tile _tile)
 void setTileState(Tile* _tile, TileState _state)
 {
 	_tile->state = _state;
+}
+
+void setTilePos(Tile* _tile, sfVector2f _pos)
+{
+	_tile->pos = _pos;
+	resetDivisionCornerPos(_tile);
+}
+
+void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius)
+{
+	_tile->pos = _pos;
+	_tile->radius = _radius;
+	resetDivisionCornerPos(_tile);
 }
 
 void debugRandomiseDivisionsTypes(Tile* _tile) // TODO to remove
