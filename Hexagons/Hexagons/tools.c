@@ -52,6 +52,22 @@ sfVector2i vector2i(int _x, int _y)
 	return v;
 }
 
+sfVector2f newVector2f(sfVector2f _v1, sfVector2f _v2)
+{
+	sfVector2f v;
+	v.x = _v2.x - _v1.x;
+	v.y = _v2.y - _v1.y;
+	return v;
+}
+
+sfVector2i newVector2i(sfVector2i _v1, sfVector2i _v2)
+{
+	sfVector2i v;
+	v.x = _v2.x - _v1.x;
+	v.y = _v2.y - _v1.y;
+	return v;
+}
+
 sfVector2f addVectorsf(sfVector2f _v1, sfVector2f _v2)
 {
 	sfVector2f v;
@@ -134,4 +150,10 @@ sfBool equalsVectors2i(sfVector2i _v1, sfVector2i _v2)
 		return sfTrue;
 
 	return sfFalse;
+}
+
+void appendNewVertexArrayPos(sfVertexArray* _vertexArray, sfVertex* _vertex, sfVector2f _pos)
+{
+	_vertex->position = _pos;
+	sfVertexArray_append(_vertexArray, *_vertex);
 }

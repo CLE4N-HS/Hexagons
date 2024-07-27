@@ -6,6 +6,7 @@
 typedef struct {
 	sfRenderWindow* renderWindow;
 	sfRenderTexture* renderTexture;
+	sfVertexArray* vertexArray;
 	sfBool isDone;
 	sfBool isFullscreen;
 }Window;

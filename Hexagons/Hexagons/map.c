@@ -117,7 +117,12 @@ void updateMap(Window* _window)
 			if (isIndexInMap(map.mouseHoverIndex)) {
 				setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x].pos);
 				map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x] = map.hand.tile[map.hand.mouseHoverIndex];
-				// delete the tile in hand
+
+				if (map.stack.nbTiles > 0) { // draws a card
+					map.hand.tile[map.hand.mouseHoverIndex] = getStackTopTile(&map.stack);
+					removeStackIndex(&map.stack, 0);
+					setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x].pos.x, HAND_START_POS.y));
+				}
 			}
 			else {
 				setTilePos(&map.hand.tile[map.hand.mouseHoverIndex], vector2f(map.hand.tile[map.hand.mouseHoverIndex].pos.x, HAND_START_POS.y));

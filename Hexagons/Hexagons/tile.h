@@ -10,6 +10,7 @@
 
 #define TILE_HOVER_COLOR color(255, 255, 255)
 #define TILE_VOID_COLOR  color( 30,  30,  30)
+#define TILE_ENV_COLOR   color(255, 255, 255)
 
 typedef enum {
 	TILE_MIDDLE = -1,
@@ -62,6 +63,7 @@ void updateTile(Window* _window, Tile** _tile);
 void displayTile(Window* _window, Tile** _tile);
 void drawTile(Window* _window, Tile* _tile);
 void drawTileHover(Window* _window, Tile* _tile);
+void drawTileEnvironement(Window* _window, Tile* _tile);
 void createTile(Tile* _tile, sfVector2f _pos, TileState _state);
 void resetDivisionCornerPos(Tile* _tile);
 sfColor getDivisonColor(TileType _type);
@@ -72,5 +74,6 @@ void setTilePos(Tile* _tile, sfVector2f _pos);
 void setTileRadius(Tile* _tile, float _radius);
 void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius);
 void rotateTile(Tile* _tile, sfBool _clockwise);
+float getTileScale(Tile* _tile);
 
 void debugRandomiseDivisionsTypes(Tile* _tile);

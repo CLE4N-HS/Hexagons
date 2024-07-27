@@ -11,6 +11,7 @@ Window* setupWindow()
 	window->isFullscreen = WINDOW_START_FULLSCREEN;
 	createWindow(window);
 	window->renderTexture = sfRenderTexture_create(WINDOW_LENGTH, WINDOW_HEIGHT, sfFalse);
+	window->vertexArray = sfVertexArray_create();
 	window->isDone = sfFalse;
 
 	return window;

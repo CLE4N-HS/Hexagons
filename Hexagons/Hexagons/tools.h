@@ -20,6 +20,8 @@ float getDeltaTimeThread2();
 
 sfVector2f vector2f(float _x, float _y);
 sfVector2i vector2i(int _x, int _y);
+sfVector2f newVector2f(sfVector2f _v1, sfVector2f _v2);
+sfVector2i newVector2i(sfVector2i _v1, sfVector2i _v2);
 sfVector2f addVectorsf(sfVector2f _v1, sfVector2f _v2);
 sfVector2i addVectorsi(sfVector2i _v1, sfVector2i _v2);
 sfVector2f MultiplyVector2f(sfVector2f _v, float _m);
@@ -30,3 +32,4 @@ sfColor color(sfUint8 _r, sfUint8 _g, sfUint8 _b);
 sfFloatRect FloatRect(float _left, float _top, float _width, float _height);
 sfIntRect IntRect(int _left, int _top, int _width, int _height);
 sfBool equalsVectors2i(sfVector2i _v1, sfVector2i _v2);
+void appendNewVertexArrayPos(sfVertexArray* _vertexArray, sfVertex* _vertex, sfVector2f _pos);

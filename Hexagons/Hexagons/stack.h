@@ -12,3 +12,5 @@ typedef struct {
 
 void displayStack(Window* _window, Stack* _stack);
 void createStack(Stack* _stack);
+Tile getStackTopTile(Stack* _stack);
+void removeStackIndex(Stack* _stack, int _index);
