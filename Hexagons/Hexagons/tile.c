@@ -320,9 +320,9 @@ float getTileScale(Tile* _tile)
 
 void debugRandomiseDivisionsTypes(Tile* _tile) // TODO to remove
 {
-	_tile->middleDivType = rand() % TILE_NB_MAX_TYPES;
+	_tile->middleDivType = 1 + rand() % (TILE_NB_MAX_TYPES - 1);
 	for (int i = 0; i < TILE_NB_MAX_DIVISIONS; i++)
 	{
-		_tile->div[i].type = rand() % TILE_NB_MAX_TYPES;
+		_tile->div[i].type = 1 + rand() % (TILE_NB_MAX_TYPES - 1);
 	}
 }
