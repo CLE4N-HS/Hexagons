@@ -1,8 +1,5 @@
-- URGENT :
-  - déplacer les interactions de map globales dans updatemap() après avoir update la main
-    c'est pas les tiles qui sont censées gérer les placement de la main etc..
-  -
-
+- les champs de ferme peuvent être représentés par du jaune mais avec un bord marron si il n'y a pas de champ à côté
+  sur la prochaine tuile
 
 
 - main centrée (ou un peu décalée à gauche) en bas comme dans HS
