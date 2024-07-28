@@ -181,6 +181,9 @@ void displayMap(Window* _window)
 		drawTileHover(_window, &map.hand.tile[map.hand.mouseHoverIndex]);
 	}
 
+	//environenement
+	drawTileEnvironement(_window, map.tile);
+
 }
 
 void createMap()

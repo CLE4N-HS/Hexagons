@@ -1,5 +1,4 @@
-- les champs de ferme peuvent être représentés par du jaune mais avec un bord marron si il n'y a pas de champ à côté
-  sur la prochaine tuile
+- arreter les bordures de ferme avant d'arriver trop vers le centre -> dans l'alignement de la div d'avant/apres
 
 
 - main centrée (ou un peu décalée à gauche) en bas comme dans HS

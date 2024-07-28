@@ -100,7 +100,8 @@ void drawTile(Window* _window, Tile* _tile)
 		break;
 	}
 
-	drawTileEnvironement(_window, _tile);
+	if (_tile->state == TILE_STATE_PLACED)
+		drawTileEnvironement(_window, _tile);
 }
 
 void drawTileHover(Window* _window, Tile* _tile)
@@ -126,11 +127,8 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 {
 	sfVertex tmpVertex;
 
-	sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
-
 	float tileScale = getTileScale(_tile);
 
-	tmpVertex.color = TILE_ENV_COLOR;
 	for (int iIntDiv = TILE_TOP_LEFT; iIntDiv <= TILE_BOTTOM_LEFT; iIntDiv++) // interior division
 	{
 		sfVector2f tmpStartPos = addVectorsf(_tile->div[iIntDiv].interiorCornerPos, MultiplyVector2f(newVector2f(_tile->div[iIntDiv].interiorCornerPos, _tile->div[iIntDiv].cornerPos), 0.5f));
@@ -144,7 +142,12 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 		{
 		case TILE_TYPE_LAND:
 			break;
+
 		case TILE_TYPE_CITY:
+			sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
+
+			tmpVertex.color = TILE_ENV_LINES_COLOR;
+
 			tmpVertex.position = addVectorsf(tmpStartPos, vector2f(-10.f * tileScale, 0.f));
 			sfVertexArray_append(_window->vertexArray, tmpVertex);
 
@@ -169,9 +172,67 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 			sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
 			sfVertexArray_clear(_window->vertexArray);
 			break;
+
 		case TILE_TYPE_FARM:
+			sfVertexArray_setPrimitiveType(_window->vertexArray, sfTriangleFan);
+
+			tmpVertex.color = TILE_ENV_FARM_BORDER_COLOR;
+
+			int nextNeighbourDiv = getNextDivIndex(iIntDiv);
+			int previousNeighbourDiv = getPreviousDivIndex(iIntDiv);
+
+			if (_tile->middleDivType != TILE_TYPE_FARM) {
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[iIntDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[nextNeighbourDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[nextNeighbourDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].interiorCornerPos, _tile->div[nextNeighbourDiv].cornerPos)));
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[iIntDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].interiorCornerPos, _tile->div[iIntDiv].cornerPos)));
+
+				drawAndClearVertexArray(_window);
+			}
+
+			if (_tile->div[nextNeighbourDiv].type != TILE_TYPE_FARM) {
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[nextNeighbourDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[nextNeighbourDiv].cornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[nextNeighbourDiv].cornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].cornerPos, _tile->div[iIntDiv].cornerPos)));
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[nextNeighbourDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].interiorCornerPos, _tile->div[iIntDiv].interiorCornerPos)));
+
+				drawAndClearVertexArray(_window);
+			}
+
+			if (_tile->div[previousNeighbourDiv].type != TILE_TYPE_FARM) {
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[iIntDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[iIntDiv].cornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[iIntDiv].cornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].cornerPos, _tile->div[nextNeighbourDiv].cornerPos)));
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[iIntDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].interiorCornerPos, _tile->div[nextNeighbourDiv].interiorCornerPos)));
+
+				drawAndClearVertexArray(_window);
+			}
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[iIntDiv].cornerPos);
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[nextNeighbourDiv].cornerPos);
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[nextNeighbourDiv].cornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].cornerPos, _tile->div[nextNeighbourDiv].interiorCornerPos)));
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[iIntDiv].cornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].cornerPos, _tile->div[iIntDiv].interiorCornerPos)));
+
+			drawAndClearVertexArray(_window);
 			break;
+
 		case TILE_TYPE_FOREST:
+			sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
+
+			tmpVertex.color = TILE_ENV_LINES_COLOR;
+
 			tmpStartPos.y += _tile->radius / 4.f;
 			tmpVertex.position = tmpStartPos;
 			sfVertexArray_append(_window->vertexArray, tmpVertex);
@@ -193,10 +254,13 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 			sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
 			sfVertexArray_clear(_window->vertexArray);
 			break;
+
 		case TILE_TYPE_WATER:
 			break;
+
 		case TILE_TYPE_RAILWAY:
 			break;
+
 		default:
 			break;
 		}
@@ -205,6 +269,104 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 	}
 
 	// TODO middle div
+
+	sfVector2f tmpStartPos = _tile->pos;
+
+	switch (_tile->middleDivType)
+	{
+	case TILE_TYPE_LAND:
+		break;
+
+	case TILE_TYPE_CITY:
+		sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
+
+		tmpVertex.color = TILE_ENV_LINES_COLOR;
+
+		tmpVertex.position = addVectorsf(tmpStartPos, vector2f(-10.f * tileScale, 0.f));
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position = PolarCoords(tmpVertex.position, 20.f * tileScale, -PI / 3.f);
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position = PolarCoords(tmpVertex.position, 20.f * tileScale, PI / 3.f);
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position.x -= 20.f * tileScale;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position.y += 15.f * tileScale;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position.x += 20.f * tileScale;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpVertex.position.y -= 15.f * tileScale;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
+		sfVertexArray_clear(_window->vertexArray);
+		break;
+
+	case TILE_TYPE_FARM:
+		sfVertexArray_setPrimitiveType(_window->vertexArray, sfTriangleFan);
+
+		tmpVertex.color = TILE_ENV_FARM_BORDER_COLOR;
+
+		for (int iIntDiv = TILE_TOP_LEFT; iIntDiv <= TILE_BOTTOM_LEFT; iIntDiv++) // interior division
+		{
+			if (_tile->div[iIntDiv].type != TILE_TYPE_FARM) {
+				int nextNeighbourDiv = getNextDivIndex(iIntDiv);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[iIntDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, _tile->div[nextNeighbourDiv].interiorCornerPos);
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[nextNeighbourDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].interiorCornerPos, PolarCoords(_tile->div[nextNeighbourDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE* tileScale, getVectorsAngle(_tile->div[nextNeighbourDiv].interiorCornerPos, _tile->div[getNextDivIndex(nextNeighbourDiv)].interiorCornerPos)))));
+
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(_tile->div[iIntDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].interiorCornerPos, PolarCoords(_tile->div[iIntDiv].interiorCornerPos, TILE_ENV_FARM_BORDER_SIZE * tileScale, getVectorsAngle(_tile->div[iIntDiv].interiorCornerPos, _tile->div[getPreviousDivIndex(iIntDiv)].interiorCornerPos)))));
+
+				drawAndClearVertexArray(_window);
+			}
+		}
+		break;
+
+	case TILE_TYPE_FOREST:
+		sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
+
+		tmpVertex.color = TILE_ENV_LINES_COLOR;
+
+		tmpStartPos.y += _tile->radius / 4.f;
+		tmpVertex.position = tmpStartPos;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		tmpStartPos.y -= 20.f * tileScale;
+		tmpVertex.position = tmpStartPos;
+		sfVertexArray_append(_window->vertexArray, tmpVertex);
+
+		sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
+		sfVertexArray_clear(_window->vertexArray);
+
+		tmpStartPos.y -= 10.f * tileScale;
+
+		for (float angle = 0.f; angle < PI * 2.f; angle += PI / 6.f)
+		{
+			tmpVertex.position = PolarCoords(tmpStartPos, 10.f * tileScale, angle);
+			sfVertexArray_append(_window->vertexArray, tmpVertex);
+		}
+		sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
+		sfVertexArray_clear(_window->vertexArray);
+		break;
+
+	case TILE_TYPE_WATER:
+		break;
+
+	case TILE_TYPE_RAILWAY:
+		break;
+
+	default:
+		break;
+	}
+
 
 }
 
@@ -316,6 +478,16 @@ void rotateTile(Tile* _tile, sfBool _clockwise)
 float getTileScale(Tile* _tile)
 {
 	return _tile->radius / (TILE_START_RADIUS);
+}
+
+int getNextDivIndex(int _currentIndex)
+{
+	return (_currentIndex >= TILE_BOTTOM_LEFT ? TILE_TOP_LEFT : _currentIndex + 1);
+}
+
+int getPreviousDivIndex(int _currentIndex)
+{
+	return (_currentIndex <= TILE_TOP_LEFT ? TILE_BOTTOM_LEFT : _currentIndex - 1);
 }
 
 void debugRandomiseDivisionsTypes(Tile* _tile) // TODO to remove

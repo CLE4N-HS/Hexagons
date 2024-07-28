@@ -8,9 +8,12 @@
 
 #define TILE_START_POS vector2f(TILE_START_RADIUS, getTileSqrApothem() / 2.f);
 
-#define TILE_HOVER_COLOR color(255, 255, 255)
-#define TILE_VOID_COLOR  color( 30,  30,  30)
-#define TILE_ENV_COLOR   color(255, 255, 255)
+#define TILE_HOVER_COLOR           color(255, 255, 255)
+#define TILE_VOID_COLOR            color( 30,  30,  30)
+#define TILE_ENV_LINES_COLOR       color(255, 255, 255)
+#define TILE_ENV_FARM_BORDER_COLOR color( 88,  57,  39)
+
+#define TILE_ENV_FARM_BORDER_SIZE 3.f
 
 typedef enum {
 	TILE_MIDDLE = -1,
@@ -75,5 +78,7 @@ void setTileRadius(Tile* _tile, float _radius);
 void setTilePosAndRadius(Tile* _tile, sfVector2f _pos, float _radius);
 void rotateTile(Tile* _tile, sfBool _clockwise);
 float getTileScale(Tile* _tile);
+int getNextDivIndex(int _currentIndex);
+int getPreviousDivIndex(int _currentIndex);
 
 void debugRandomiseDivisionsTypes(Tile* _tile);

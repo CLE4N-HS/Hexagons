@@ -88,3 +88,9 @@ void toggleFullscreen(Window* _window)
 {
 	_window->isFullscreen = !_window->isFullscreen;
 }
+
+void drawAndClearVertexArray(Window* _window)
+{
+	sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
+	sfVertexArray_clear(_window->vertexArray);
+}
