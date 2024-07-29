@@ -48,6 +48,9 @@
     <ClCompile Include="hand.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="vertexFont.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="customMath.h">
@@ -78,6 +81,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="hand.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="vertexFont.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

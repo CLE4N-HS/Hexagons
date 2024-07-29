@@ -143,6 +143,7 @@
     <ClCompile Include="stack.c" />
     <ClCompile Include="tile.c" />
     <ClCompile Include="tools.c" />
+    <ClCompile Include="vertexFont.c" />
     <ClCompile Include="windowManager.c" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="stack.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="tools.h" />
+    <ClInclude Include="vertexFont.h" />
     <ClInclude Include="windowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
