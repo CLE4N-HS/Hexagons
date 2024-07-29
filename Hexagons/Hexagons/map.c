@@ -5,7 +5,6 @@
 #include "tile.h"
 #include "stack.h"
 #include "hand.h"
-#include "vertexFont.h"
 
 typedef struct {
 	sfVector2i size;
@@ -144,26 +143,8 @@ void updateMap(Window* _window)
 
 void displayMap(Window* _window)
 {
-	//tmp
-	for (int i = 0; i < 10; i++)
-	{
-		drawVertexDigit(_window, i, vector2f(100.f + 100.f * (float)i, 300.f), sfWhite, vector2f(20.f, 40.f));
-	}
+	displayTile(_window, map.tile);
 
-	drawVertexInteger(_window, 123456789, vector2f(100.f, 700.f), sfWhite, vector2f(20.f, 40.f), vector2f(100.f, 0.f));
-	drawVertexInteger(_window, 987654321, vector2f(100.f, 850.f), sfWhite, vector2f(20.f, 40.f), vector2f(100.f, 0.f));
-	drawVertexInteger(_window, 23, vector2f(200.f, 900.f), sfWhite, vector2f(20.f, 40.f), vector2f(100.f, 0.f));
-
-	return;
-
-	//displayTile(_window, map.tile);
-	for (int j = 0; j < map.size.y; j++)
-	{
-		for (int i = 0; i < map.size.x; i++)
-		{
-			drawTile(_window, &map.tile[j][i]);
-		}
-	}
 
 	if (isIndexInMap(map.mouseHoverIndex)) {
 		drawTileHover(_window, &map.tile[map.mouseHoverIndex.y][map.mouseHoverIndex.x]);
@@ -174,29 +155,17 @@ void displayMap(Window* _window)
 
 
 
-	//displayStack(_window, &map.stack);
-	for (int i = 0; i < map.stack.nbTiles; i++)
-	{
-		drawTile(_window, &map.stack.tile[i]);
-	}
+	displayStack(_window, &map.stack);
 
 
 
+	displayHand(_window, &map.hand);
 
 
-	//displayHand(_window, &map.hand);
-	for (int i = 0; i < map.hand.nbTiles; i++)
-	{
-		drawTile(_window, &map.hand.tile[i]);
-	}
 
-	if (map.hand.mouseHoverIndex >= 0) {
-		drawTileHover(_window, &map.hand.tile[map.hand.mouseHoverIndex]);
-	}
 
 	//environenement
-	drawTileEnvironement(_window, map.tile);
-
+	//drawTileEnvironement(_window, map.tile);
 }
 
 void createMap()

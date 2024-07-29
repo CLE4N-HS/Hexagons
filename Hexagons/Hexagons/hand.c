@@ -1,6 +1,7 @@
 #include "hand.h"
 #include "mouseManager.h"
 #include "customMath.h"
+#include "tile.h"
 
 void updateHand(Window* _window, Hand* _hand)
 {
@@ -9,7 +10,14 @@ void updateHand(Window* _window, Hand* _hand)
 
 void displayHand(Window* _window, Hand* _hand)
 {
+	for (int i = 0; i < _hand->nbTiles; i++)
+	{
+		drawTile(_window, &_hand->tile[i]);
+	}
 
+	if (_hand->mouseHoverIndex >= 0) {
+		drawTileHover(_window, &_hand->tile[_hand->mouseHoverIndex]);
+	}
 }
 
 void createHand(Hand* _hand)

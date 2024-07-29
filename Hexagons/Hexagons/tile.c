@@ -27,7 +27,15 @@ void updateTile(Window* _window, Tile** _tile)
 
 void displayTile(Window* _window, Tile** _tile)
 {
+	sfVector2i mapSize = getMapSize();
 
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			drawTile(_window, &_tile[j][i]);
+		}
+	}
 }
 
 void drawTile(Window* _window, Tile* _tile)
@@ -237,18 +245,18 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 			tmpVertex.position = tmpStartPos;
 			sfVertexArray_append(_window->vertexArray, tmpVertex);
 
-			tmpStartPos.y -= 20.f * tileScale;
+			tmpStartPos.y -= 12.f * tileScale;
 			tmpVertex.position = tmpStartPos;
 			sfVertexArray_append(_window->vertexArray, tmpVertex);
 
 			sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
 			sfVertexArray_clear(_window->vertexArray);
 
-			tmpStartPos.y -= 10.f * tileScale;
+			tmpStartPos.y -= 8.f * tileScale;
 
 			for (float angle = 0.f; angle < PI * 2.f; angle += PI / 6.f)
 			{
-				tmpVertex.position = PolarCoords(tmpStartPos, 10.f * tileScale, angle);
+				tmpVertex.position = PolarCoords(tmpStartPos, 8.f * tileScale, angle);
 				sfVertexArray_append(_window->vertexArray, tmpVertex);
 			}
 			sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
@@ -339,18 +347,18 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 		tmpVertex.position = tmpStartPos;
 		sfVertexArray_append(_window->vertexArray, tmpVertex);
 
-		tmpStartPos.y -= 20.f * tileScale;
+		tmpStartPos.y -= 12.f * tileScale;
 		tmpVertex.position = tmpStartPos;
 		sfVertexArray_append(_window->vertexArray, tmpVertex);
 
 		sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);
 		sfVertexArray_clear(_window->vertexArray);
 
-		tmpStartPos.y -= 10.f * tileScale;
+		tmpStartPos.y -= 8.f * tileScale;
 
 		for (float angle = 0.f; angle < PI * 2.f; angle += PI / 6.f)
 		{
-			tmpVertex.position = PolarCoords(tmpStartPos, 10.f * tileScale, angle);
+			tmpVertex.position = PolarCoords(tmpStartPos, 8.f * tileScale, angle);
 			sfVertexArray_append(_window->vertexArray, tmpVertex);
 		}
 		sfRenderTexture_drawVertexArray(_window->renderTexture, _window->vertexArray, NULL);

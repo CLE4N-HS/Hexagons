@@ -1,4 +1,4 @@
-- arreter les bordures de ferme avant d'arriver trop vers le centre -> dans l'alignement de la div d'avant/apres
+- 
 
 
 - main centrée (ou un peu décalée à gauche) en bas comme dans HS

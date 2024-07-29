@@ -1,8 +1,14 @@
 #include "stack.h"
+#include "tile.h"
+#include "vertexFont.h"
 
 void displayStack(Window* _window, Stack* _stack)
 {
-	// TODO draw nbTiles
+	// draws the top tile
+	drawTile(_window, &_stack->tile[0]);
+
+	// nbTiles
+	drawVertexInteger(_window, _stack->nbTiles, STACK_NB_TILES_POS, STACK_NB_TILES_COLOR, STACK_NB_TILES_SIZE, STACK_NB_TILES_SPACE);
 }
 
 void createStack(Stack* _stack)
@@ -16,7 +22,7 @@ void createStack(Stack* _stack)
 	for (int i = 0; i < _stack->nbTiles; i++)
 	{
 		createTile(&_stack->tile[i], tilePos, TILE_STATE_PLACED);
-		tilePos.y += TILE_START_SIZE;
+		//tilePos.y += TILE_START_SIZE;
 		debugRandomiseDivisionsTypes(&_stack->tile[i]);
 	}
 }
@@ -34,4 +40,8 @@ void removeStackIndex(Stack* _stack, int _index)
 	}
 
 	_stack->tile = (Tile*)realloc(_stack->tile, (_stack->nbTiles--) * sizeof(Tile));
+}
+
+void drawStackNbTiles(Window* _window, Stack* _stack)
+{
 }
