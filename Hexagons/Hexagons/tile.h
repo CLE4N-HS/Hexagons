@@ -12,6 +12,7 @@
 #define TILE_VOID_COLOR            color( 30,  30,  30)
 #define TILE_ENV_LINES_COLOR       color(255, 255, 255)
 #define TILE_ENV_FARM_BORDER_COLOR color( 88,  57,  39)
+#define TILE_ENV_LAND_DOTS         color(  0,   0,   0)
 
 #define TILE_ENV_FARM_BORDER_SIZE 3.f
 

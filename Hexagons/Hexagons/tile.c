@@ -149,6 +149,43 @@ void drawTileEnvironement(Window* _window, Tile* _tile)
 		switch (_tile->div[iIntDiv].type)
 		{
 		case TILE_TYPE_LAND:
+			sfVertexArray_setPrimitiveType(_window->vertexArray, sfLineStrip);
+
+			tmpVertex.color = TILE_ENV_LAND_DOTS;
+
+
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, tmpStartPos);
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, addVectorsf(tmpVertex.position, vector2f(0.f, -5.f * tileScale)));
+			drawAndClearVertexArray(_window);
+
+			for (float angle = 0; angle < 2.f * PI; angle += PI / 3.f)
+			{
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(tmpStartPos, 15.f * tileScale, angle));
+				appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, addVectorsf(tmpVertex.position, vector2f(0.f, -5.f * tileScale)));
+				drawAndClearVertexArray(_window);
+			}
+
+			float tileAngle = getAngleBetweenVectors(_tile->pos, tmpStartPos) + PI / 2.f;
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(tmpStartPos, 20.f * tileScale, tileAngle + PI / 6.f));
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, addVectorsf(tmpVertex.position, vector2f(0.f, -5.f * tileScale)));
+			drawAndClearVertexArray(_window);
+
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, PolarCoords(tmpStartPos, 20.f * tileScale, tileAngle - PI / 6.f));
+			appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, addVectorsf(tmpVertex.position, vector2f(0.f, -5.f * tileScale)));
+			drawAndClearVertexArray(_window);
+
+			//appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, addVectorsf(tmpStartPos);
+			//drawAndClearVertexArray(_window);
+			//
+			//appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, tmpStartPos);
+			//drawAndClearVertexArray(_window);
+			//
+			//appendNewVertexArrayPos(_window->vertexArray, &tmpVertex, tmpStartPos);
+			//drawAndClearVertexArray(_window);
+
+
 			break;
 
 		case TILE_TYPE_CITY:
