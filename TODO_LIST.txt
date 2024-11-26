@@ -1,0 +1,15 @@
+- 
+
+
+- main centrée (ou un peu décalée à gauche) en bas comme dans HS
+- on peut choisir la tuile qu'on place
+- quand on place une tuile on en pioche une autre (pas forcément)
+
+- maybe 3 choix de pioche max par tour, les tuiles de pioche sont faces cachées
+  maybe un symbole sur le dos qui indiquerait la difficulté estimée à placer
+
+-shader sur les tuiles faces cachées pour les différencier
+
+- clic droit pour déplacer la map -> glisser pour slider, mouvement dégressif même quand on lâche, re clic droit stop tout
+
+- molette pour zoomer / dézoomer la map

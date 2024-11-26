@@ -135,22 +135,28 @@
   <ItemGroup>
     <ClCompile Include="customMath.c" />
     <ClCompile Include="game.c" />
-    <ClCompile Include="hud.c" />
+    <ClCompile Include="hand.c" />
     <ClCompile Include="keyboardManager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="mouseManager.c" />
+    <ClCompile Include="stack.c" />
+    <ClCompile Include="tile.c" />
     <ClCompile Include="tools.c" />
+    <ClCompile Include="vertexFont.c" />
     <ClCompile Include="windowManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="customMath.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="hud.h" />
+    <ClInclude Include="hand.h" />
     <ClInclude Include="keyboardManager.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mouseManager.h" />
+    <ClInclude Include="stack.h" />
+    <ClInclude Include="tile.h" />
     <ClInclude Include="tools.h" />
+    <ClInclude Include="vertexFont.h" />
     <ClInclude Include="windowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

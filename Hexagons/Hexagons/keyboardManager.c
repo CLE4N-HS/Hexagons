@@ -1,44 +1,43 @@
 #include "keyboardManager.h"
 
 typedef struct {
-	sfBool hasFocus;
-	sfBool hasReleased;
-	sfBool hasPressed;
-	sfKeyCode key;
+	KeyState keyState[sfKeyCount];
 }Keyboard;
 Keyboard keyboard;
 
 void initKeyboard()
 {
-	keyboard.hasFocus = sfFalse;
-	keyboard.hasReleased = sfTrue;
-	keyboard.hasPressed = sfFalse;
-	keyboard.key = sfKeySpace;
+	for (int i = 0; i < sfKeyCount; i++)
+	{
+		keyboard.keyState[i] = KEY_STATE_RELEASED;
+	}
 }
 
 void updateKeyboard(Window* _window)
 {
-	keyboard.hasFocus = sfRenderWindow_hasFocus(_window->renderWindow);
-
-	if (!keyboard.hasReleased)
-		keyboard.hasReleased = !sfKeyboard_isKeyPressed(keyboard.key);
-}
-
-sfBool hasPressed(sfKeyCode _key)
-{
-	if (keyboard.hasFocus && keyboard.hasReleased && sfKeyboard_isKeyPressed(_key)) {
-		keyboard.hasReleased = sfFalse;
-		keyboard.key = _key;
-		return sfTrue;
+	for (int i = 0; i < sfKeyCount; i++)
+	{
+		if (sfKeyboard_isKeyPressed(i)) {
+			if (keyboard.keyState[i] <= KEY_STATE_RELEASED)
+				keyboard.keyState[i] = KEY_STATE_HAS_PRESSED;
+			else
+				keyboard.keyState[i] = KEY_STATE_PRESSED;
+		}
+		else {
+			if (keyboard.keyState[i] >= KEY_STATE_PRESSED)
+				keyboard.keyState[i] = KEY_STATE_HAS_RELEASED;
+			else
+				keyboard.keyState[i] = KEY_STATE_RELEASED;
+		}
 	}
-
-	return sfFalse;
 }
 
-sfBool isPressing(sfKeyCode _key)
+sfBool isKeyPressed(sfKeyCode _key)
 {
-	if (keyboard.hasFocus && sfKeyboard_isKeyPressed(_key))
-		return sfTrue;
+	return (keyboard.keyState[_key] >= KEY_STATE_PRESSED ? sfTrue : sfFalse);
+}
 
-	return sfFalse;
+KeyState getKeyState(sfKeyCode _key)
+{
+	return keyboard.keyState[_key];
 }

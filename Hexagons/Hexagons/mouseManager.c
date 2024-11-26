@@ -2,51 +2,49 @@
 
 typedef struct {
 	sfVector2f pos;
-	sfBool hasFocus;
-	sfBool hasReleased;
-	sfBool hasPressed;
-	sfMouseButton button;
+	MouseButtonState buttonState[sfMouseButtonCount];
 }Mouse;
 Mouse mouse;
 
 void initMouse()
 {
-	mouse.hasFocus = sfFalse;
-	mouse.hasReleased = sfTrue;
-	mouse.button = sfMouseLeft;
 	mouse.pos = NULLVECTOR2F;
+	
+	for (int i = 0; i < sfMouseButtonCount; i++)
+	{
+		mouse.buttonState[i] = MOUSE_STATE_RELEASED;
+	}
 }
 
 void updateMouse(Window* _window)
 {
-	mouse.hasFocus = sfRenderWindow_hasFocus(_window->renderWindow);
-
-	if (!mouse.hasReleased)
-		mouse.hasReleased = !sfMouse_isButtonPressed(mouse.button);
-
 	mouse.pos = V2iToV2f(sfMouse_getPositionRenderWindow(_window->renderWindow));
+
+	for (int i = 0; i < sfMouseButtonCount; i++)
+	{
+		if (sfMouse_isButtonPressed(i)) {
+			if (mouse.buttonState[i] <= MOUSE_STATE_RELEASED)
+				mouse.buttonState[i] = MOUSE_STATE_HAS_PRESSED;
+			else
+				mouse.buttonState[i] = MOUSE_STATE_PRESSED;
+		}
+		else {
+			if (mouse.buttonState[i] >= MOUSE_STATE_PRESSED)
+				mouse.buttonState[i] = MOUSE_STATE_HAS_RELEASED;
+			else
+				mouse.buttonState[i] = MOUSE_STATE_RELEASED;
+		}
+	}
 }
 
-sfBool leftClick()
+sfBool isMouseButtonPressed(sfMouseButton _button)
 {
-	if (mouse.hasFocus && mouse.hasReleased && sfMouse_isButtonPressed(sfMouseLeft)) {
-		mouse.hasReleased = sfFalse;
-		mouse.button = sfMouseLeft;
-		return sfTrue;
-	}
-
-	return sfFalse;
+	return (mouse.buttonState[_button] >= MOUSE_STATE_PRESSED ? sfTrue : sfFalse);
 }
 
-sfBool leftClickUnreleased()
+MouseButtonState getMouseButtonState(sfMouseButton _button)
 {
-	if (mouse.hasFocus && sfMouse_isButtonPressed(sfMouseLeft)) {
-		//mouse.hasReleased = sfFalse;
-		mouse.button = sfMouseLeft;
-		return sfTrue;
-	}
-
-	return sfFalse;
+	return mouse.buttonState[_button];
 }
 
 sfVector2f getMousePos()
